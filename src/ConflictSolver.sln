@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29920.165
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConflictSolver", "ConflictSolver\ConflictSolver.csproj", "{A208523A-CBAD-4963-A491-5889D0672E74}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{2A24ECA9-076F-461F-A647-148BACD40DC4}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		GitVersion.yml = GitVersion.yml
+		stylecop.json = stylecop.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A208523A-CBAD-4963-A491-5889D0672E74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A208523A-CBAD-4963-A491-5889D0672E74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A208523A-CBAD-4963-A491-5889D0672E74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A208523A-CBAD-4963-A491-5889D0672E74}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AF0A3454-FA72-4061-86C6-BBF0C0749622}
+	EndGlobalSection
+EndGlobal
