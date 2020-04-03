@@ -21,6 +21,8 @@
     <PackageReference Include="Roslynator.CodeAnalysis.Analyzers" Version="1.0.0-beta" />
     <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.164" />
     <PackageReference Include="Lib.Harmony" Version="1.2.0.1" />
+    <PackageReference Include="Fody" Version="6.1.1" />
+    <PackageReference Include="ModuleInit.Fody" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp" />
