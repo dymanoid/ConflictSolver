@@ -2,6 +2,7 @@
 // Copyright (c) dymanoid. All rights reserved.
 // </copyright>
 
+using ConflictSolver.Game;
 using UnityEngine;
 using static ConflictSolver.UI.Appearance;
 

@@ -2,7 +2,7 @@
 // Copyright (c) dymanoid. All rights reserved.
 // </copyright>
 
-namespace ConflictSolver
+namespace ConflictSolver.Game
 {
     /// <summary>
     /// An interface for the Unity game objects that can be destroyed.

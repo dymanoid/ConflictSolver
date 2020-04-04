@@ -5,7 +5,7 @@
 using System;
 using UnityEngine;
 
-namespace ConflictSolver
+namespace ConflictSolver.Game
 {
     /// <summary>
     /// A service class for interacting with the Unity engine.

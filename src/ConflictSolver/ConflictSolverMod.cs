@@ -3,6 +3,8 @@
 // </copyright>
 
 using System.Text;
+using ConflictSolver.Game;
+using ConflictSolver.Monitor;
 using ConflictSolver.Results;
 using ConflictSolver.UI;
 using ICities;

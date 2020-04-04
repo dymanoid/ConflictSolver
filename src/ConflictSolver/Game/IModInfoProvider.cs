@@ -4,7 +4,7 @@
 
 using System;
 
-namespace ConflictSolver
+namespace ConflictSolver.Game
 {
     /// <summary>
     /// An interface for a service that can provide various information about the mods.

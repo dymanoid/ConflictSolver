@@ -8,7 +8,7 @@ using System.Reflection;
 using Harmony;
 using UnityEngine;
 
-namespace ConflictSolver
+namespace ConflictSolver.Monitor
 {
     /// <summary>
     /// The main conflict solver engine class.
@@ -19,7 +19,7 @@ namespace ConflictSolver
         private const string HarmonyId = "com.dymanoid.conflictsolver";
 
         private readonly HarmonyInstance _harmonyInstance = HarmonyInstance.Create(HarmonyId);
-        private readonly MethodCatalog _methodCatalog = new MethodCatalog();
+        private readonly IMethodCatalog _methodCatalog = new MethodCatalog();
 
         private bool _isRunning;
 

@@ -9,7 +9,7 @@ using System.Reflection;
 using ColossalFramework.Plugins;
 using ICities;
 
-namespace ConflictSolver
+namespace ConflictSolver.Game
 {
     /// <summary>
     /// A service that can provide various information for the game mods.

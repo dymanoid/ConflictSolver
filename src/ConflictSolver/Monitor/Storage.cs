@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace ConflictSolver
+namespace ConflictSolver.Monitor
 {
     /// <summary>
     /// A storage class that holds the data collected by the <see cref="Engine"/>.

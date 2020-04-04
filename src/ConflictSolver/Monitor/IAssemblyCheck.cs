@@ -4,7 +4,7 @@
 
 using System.Reflection;
 
-namespace ConflictSolver
+namespace ConflictSolver.Monitor
 {
     /// <summary>
     /// An interface for a helper service for determining the assembly categories.

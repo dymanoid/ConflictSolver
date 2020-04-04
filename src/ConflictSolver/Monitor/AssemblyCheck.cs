@@ -11,7 +11,7 @@ using ColossalFramework.Plugins;
 using Harmony;
 using UnityEngine;
 
-namespace ConflictSolver
+namespace ConflictSolver.Monitor
 {
     /// <summary>
     /// A helper class for determining the assembly categories.

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace ConflictSolver
+namespace ConflictSolver.Monitor
 {
     /// <summary>
     /// A catalog of <see cref="MethodInfo"/> instances that need to be patched to collect

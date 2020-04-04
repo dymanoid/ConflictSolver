@@ -2,6 +2,9 @@
 // Copyright (c) dymanoid. All rights reserved.
 // </copyright>
 
+using ConflictSolver.Game;
+using ConflictSolver.Monitor;
+
 namespace ConflictSolver
 {
     /// <summary>
