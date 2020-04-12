@@ -12,7 +12,7 @@ namespace ConflictSolver.UI
     internal sealed class WindowArea
     {
         private readonly Vector2 _margin;
-        private readonly WindowBase _window;
+        private readonly IWindow _window;
 
         private Vector2 _absoluteOffset;
         private Vector2 _relativeOffset;
@@ -25,8 +25,8 @@ namespace ConflictSolver.UI
         /// <summary>
         /// Initializes a new instance of the <see cref="WindowArea"/> class without any margins.
         /// </summary>
-        /// <param name="window">The <see cref="WindowBase"/> this are belongs to.</param>
-        public WindowArea(WindowBase window)
+        /// <param name="window">The <see cref="IWindow"/> this are belongs to.</param>
+        public WindowArea(IWindow window)
             : this(window, 0f, 0f)
         {
         }
@@ -34,9 +34,9 @@ namespace ConflictSolver.UI
         /// <summary>
         /// Initializes a new instance of the <see cref="WindowArea"/> class with specified <paramref name="margin"/>.
         /// </summary>
-        /// <param name="window">The <see cref="WindowBase"/> this are belongs to.</param>
+        /// <param name="window">The <see cref="IWindow"/> this are belongs to.</param>
         /// <param name="margin">The vertical and horizontal margin of the area.</param>
-        public WindowArea(WindowBase window, float margin)
+        public WindowArea(IWindow window, float margin)
             : this(window, margin, margin)
         {
         }
@@ -45,10 +45,10 @@ namespace ConflictSolver.UI
         /// Initializes a new instance of the <see cref="WindowArea"/> class with specified horizontal
         /// and vertical margins.
         /// </summary>
-        /// <param name="window">The <see cref="WindowBase"/> this are belongs to.</param>
+        /// <param name="window">The <see cref="IWindow"/> this are belongs to.</param>
         /// <param name="horizontalMargin">The horizontal margin of the area.</param>
         /// <param name="verticalMargin">The vertical margin of the area.</param>
-        public WindowArea(WindowBase window, float horizontalMargin, float verticalMargin)
+        public WindowArea(IWindow window, float horizontalMargin, float verticalMargin)
         {
             _window = window ?? throw new System.ArgumentNullException(nameof(window));
             _margin = new Vector2(horizontalMargin, verticalMargin);

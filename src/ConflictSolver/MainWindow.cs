@@ -2,15 +2,17 @@
 // Copyright (c) dymanoid. All rights reserved.
 // </copyright>
 
+using System;
+using ConflictSolver.UI;
 using UnityEngine;
 
-namespace ConflictSolver.UI
+namespace ConflictSolver
 {
     /// <summary>
     /// The mod's main window.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812", Justification = "Instantiated indirectly by Unity")]
-    internal sealed class MainWindow : WindowBase
+    internal sealed class MainWindow : WindowBase<MainViewModel>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.

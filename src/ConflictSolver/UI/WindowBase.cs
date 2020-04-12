@@ -11,7 +11,9 @@ namespace ConflictSolver.UI
     /// <summary>
     /// A base class for the mod's windows.
     /// </summary>
-    internal abstract class WindowBase : MonoBehaviour, IGameObject, IDestroyableObject, IGuiObject
+    /// <typeparam name="T">The type of the data context to be used as view-model.</typeparam>
+    internal abstract class WindowBase<T> : MonoBehaviour, IGameObject, IDestroyableObject, IGuiObject, IWindow
+        where T : class
     {
         private static int LastUsedWindowId = 4095;
 
@@ -35,7 +37,7 @@ namespace ConflictSolver.UI
         private bool _isResizing;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WindowBase"/> class.
+        /// Initializes a new instance of the <see cref="WindowBase{T}"/> class.
         /// </summary>
         /// <param name="title">The title of the window.</param>
         /// <param name="initialBoundaries">The initial window's boundaries.</param>
@@ -56,14 +58,10 @@ namespace ConflictSolver.UI
                 .OffsetBy(vertical: TitleBarHeight);
         }
 
-        /// <summary>
-        /// Gets the current window's boundaries.
-        /// </summary>
+        /// <inheritdoc/>
         public Rect WindowBoundaries => _windowBoundaries;
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the window is currently visible.
-        /// </summary>
+        /// <inheritdoc/>
         public bool IsVisible
         {
             get => _isVisible;
@@ -84,10 +82,13 @@ namespace ConflictSolver.UI
             }
         }
 
-        /// <summary>
-        /// Gets a value indicating whether the mouse cursor is currently over this window.
-        /// </summary>
+        /// <inheritdoc/>
         public bool IsMouseOverWindow => _isVisible && _windowBoundaries.Contains(GetScreenMousePosition());
+
+        /// <summary>
+        /// Gets or sets the data context of this window.
+        /// </summary>
+        public T DataContext { get; set; }
 
         /// <inheritdoc/>
         public virtual void Update() => _modalUI.UpdateModalState(IsMouseOverWindow);
