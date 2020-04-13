@@ -22,7 +22,7 @@ namespace ConflictSolver
         /// <summary>
         /// Gets the description of this mod.
         /// </summary>
-        public string Description => "Detects possible mod conflicts. Automatically!";
+        public string Description => Strings.ModDescription;
 
         /// <summary>
         /// This method will be called by the game when this mod has to be enabled.

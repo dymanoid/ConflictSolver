@@ -39,7 +39,7 @@ namespace ConflictSolver.Views
             indent += Appearance.LargeMargin;
 
             mod.IsReflectionListExpanded = DrawTools.DrawExpander(
-                () => DrawItemHeader("Reflection Queries by this Mod", mod.QueriesDescription),
+                () => DrawItemHeader(Strings.ReflectionQueries, mod.QueriesDescription),
                 mod.IsReflectionListExpanded,
                 i => DrawStringList(mod.QueriedMembers, i),
                 indent);
@@ -52,7 +52,7 @@ namespace ConflictSolver.Views
             GUILayout.BeginHorizontal();
             GUILayout.Space(indent);
             GUI.contentColor = Colors.Text;
-            GUILayout.Label("Possible Mod Conflicts");
+            GUILayout.Label(Strings.PossibleModConflicts);
             GUILayout.EndHorizontal();
 
             DrawConflictedMods(mod.Conflicts, indent);

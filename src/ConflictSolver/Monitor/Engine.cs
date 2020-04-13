@@ -16,7 +16,7 @@ namespace ConflictSolver.Monitor
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1812", Justification = "Instantiated indirectly by Unity")]
     internal sealed class Engine : MonoBehaviour
     {
-        private const string HarmonyId = "com.dymanoid.conflictsolver";
+        private const string HarmonyId = Strings.ModHarmonyId;
 
         private readonly HarmonyInstance _harmonyInstance = HarmonyInstance.Create(HarmonyId);
         private readonly IMethodCatalog _methodCatalog = new MethodCatalog();

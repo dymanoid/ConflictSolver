@@ -24,7 +24,7 @@ namespace ConflictSolver.Views
         public ConflictInfoViewModel(ConflictInfo conflict)
         {
             _conflict = conflict ?? throw new ArgumentNullException(nameof(conflict));
-            Description = TextTools.GetNumberDescriptionText(conflict.MemberCount, "member");
+            Description = TextTools.GetNumberDescriptionText(conflict.MemberCount, Strings.Member);
         }
 
         /// <summary>

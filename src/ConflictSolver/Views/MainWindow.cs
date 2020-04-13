@@ -65,12 +65,12 @@ namespace ConflictSolver.Views
         private static void DrawProcessingLabel()
         {
             GUI.contentColor = Colors.Text;
-            GUILayout.Label("Processing...");
+            GUILayout.Label(Strings.Processing);
         }
 
         private void DrawSnapshotButton()
         {
-            if (DrawTools.DrawButton("Take Snapshot"))
+            if (DrawTools.DrawButton(Strings.TakeSnapshot))
             {
                 DataContext.TakeSnapshot();
             }
@@ -80,19 +80,19 @@ namespace ConflictSolver.Views
         {
             GUILayout.BeginHorizontal(GUILayout.ExpandHeight(false));
 
-            bool actionRequested = DrawTools.DrawButton("Expand All");
+            bool actionRequested = DrawTools.DrawButton(Strings.ExpandAll);
             if (actionRequested)
             {
                 DataContext.ExpandAll();
             }
 
-            actionRequested = DrawTools.DrawButton("Collapse All");
+            actionRequested = DrawTools.DrawButton(Strings.CollapseAll);
             if (actionRequested)
             {
                 DataContext.CollapseAll();
             }
 
-            actionRequested = DrawTools.DrawButton("Copy to Clipboard");
+            actionRequested = DrawTools.DrawButton(Strings.CopyToClipboard);
             if (actionRequested)
             {
                 DataContext.CopyToClipboard();
@@ -100,7 +100,7 @@ namespace ConflictSolver.Views
 
             GUILayout.FlexibleSpace();
 
-            actionRequested = DrawTools.DrawButton("Delete Snapshot");
+            actionRequested = DrawTools.DrawButton(Strings.DeleteSnapshot);
             if (actionRequested)
             {
                 DataContext.Clear();

@@ -25,7 +25,7 @@ namespace ConflictSolver.Views
         public MonitoredModViewModel(MonitoredMod modInfo)
         {
             _modInfo = modInfo ?? throw new ArgumentNullException(nameof(modInfo));
-            Description = TextTools.GetNumberDescriptionText(modInfo.ConflictCount, "possible conflict");
+            Description = TextTools.GetNumberDescriptionText(modInfo.ConflictCount, Strings.PossibleConflict);
             QueriesDescription = "(" + modInfo.QueriesCount + ")";
             var conflicts = modInfo.Conflicts.Select(c => new ConflictInfoViewModel(c)).ToList();
             AnyConflicts = conflicts.Count > 0;
