@@ -16,42 +16,42 @@ namespace ConflictSolver.UI
         /// <summary>
         /// Gets the window background color.
         /// </summary>
-        public static Color WindowBackground { get; } = FromRgb(100, 100, 110, 235);
+        public static Color WindowBackground { get; } = FromRgb(78, 78, 80, 245);
 
         /// <summary>
-        /// Gets the window title bar background color.
+        /// Gets the color of the window border.
         /// </summary>
-        public static Color TitleBarBackground { get; } = FromRgb(20, 20, 20);
+        public static Color WindowBorder { get; } = FromRgb(30, 30, 30);
 
         /// <summary>
-        /// Gets the window title bar background color in its the hovered state.
+        /// Gets the color of the window border in its the hovered state.
         /// </summary>
-        public static Color TitleBarHoveredBackground { get; } = FromRgb(70, 70, 70);
+        public static Color WindowBorderHovered { get; } = FromRgb(120, 120, 124);
 
         /// <summary>
-        /// Gets window the title bar text color.
+        /// Gets the controls text color.
         /// </summary>
-        public static Color TitleBarText { get; } = Color.white;
+        public static Color ControlText { get; } = FromRgb(255, 255, 255);
 
         /// <summary>
-        /// Gets the color of the window's resize handle.
+        /// Gets the basic text color.
         /// </summary>
-        public static Color ResizeHandle { get; } = FromRgb(160, 160, 160);
+        public static Color Text { get; } = FromRgb(200, 200, 200);
 
         /// <summary>
-        /// Gets the color of the window's resize handle in its the hovered state.
+        /// Gets the shaded text color. It is somewhat shaded compared to the basic text color.
         /// </summary>
-        public static Color ResizeHandleHovered { get; } = FromRgb(190, 190, 190);
+        public static Color ShadedText { get; } = FromRgb(128, 128, 128);
 
         /// <summary>
         /// Gets the color of the window's 'close' button.
         /// </summary>
-        public static Color CloseButton { get; } = FromRgb(190, 20, 20);
+        public static Color CloseButton { get; } = FromRgb(0, 122, 204);
 
         /// <summary>
         /// Gets the color of the window's 'close' button in its hovered state.
         /// </summary>
-        public static Color CloseButtonHovered { get; } = FromRgb(240, 40, 40);
+        public static Color CloseButtonHovered { get; } = FromRgb(28, 151, 234);
 
         private static Color FromRgb(int red, int green, int blue)
             => new Color(red / MaxByte, green / MaxByte, blue / MaxByte, 1f);

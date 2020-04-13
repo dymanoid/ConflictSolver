@@ -44,17 +44,27 @@ namespace ConflictSolver.UI
         /// <summary>
         /// The default button height.
         /// </summary>
-        public const float ButtonHeight = 28f;
-
-        /// <summary>
-        /// The font name for the UI.
-        /// </summary>
-        public const string FontName = "Arial";
+        public const float ButtonHeight = 32f;
 
         /// <summary>
         /// The font size for the UI.
         /// </summary>
-        public const int FontSize = 14;
+        public const int FontSize = 15;
+
+        /// <summary>
+        /// The symbol for the expander title button (expanded state).
+        /// </summary>
+        public const string ExpanderExpandedSymbol = "˅";
+
+        /// <summary>
+        /// The symbol for the expander title button (collapsed state).
+        /// </summary>
+        public const string ExpanderCollapsedSymbol = ">";
+
+        /// <summary>
+        /// The font names for the UI. The first existing font from this list will be applied.
+        /// </summary>
+        public static readonly string[] FontNames = { "Segoe UI", "Arial" };
 
         /// <summary>
         /// Gets default boundaries of the mod's window.

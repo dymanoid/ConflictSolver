@@ -2,7 +2,9 @@
 // Copyright (c) dymanoid. All rights reserved.
 // </copyright>
 
+using ConflictSolver.Tools;
 using UnityEngine;
+using static ConflictSolver.UI.Appearance;
 
 namespace ConflictSolver.UI
 {
@@ -46,12 +48,12 @@ namespace ConflictSolver.UI
         public Texture2D CloseButtonHoverTexture { get; } = new Texture2D(1, 1);
 
         /// <summary>
-        /// Gets the texture of the window's border and title bar..
+        /// Gets the texture of the window's border.
         /// </summary>
         public Texture2D WindowBorderNormalTexture { get; } = new Texture2D(1, 1);
 
         /// <summary>
-        /// Gets the texture of the window's border and title bar in their hovered state.
+        /// Gets the texture of the window's border in their hovered state.
         /// </summary>
         public Texture2D WindowBorderHoverTexture { get; } = new Texture2D(1, 1);
 
@@ -65,10 +67,10 @@ namespace ConflictSolver.UI
             BackgroundTexture.SetPixel(0, 0, Colors.WindowBackground);
             BackgroundTexture.Apply();
 
-            ResizeHandleNormalTexture.SetPixel(0, 0, Colors.ResizeHandle);
+            ResizeHandleNormalTexture.SetPixel(0, 0, Colors.WindowBorder);
             ResizeHandleNormalTexture.Apply();
 
-            ResizeHandleHoverTexture.SetPixel(0, 0, Colors.ResizeHandleHovered);
+            ResizeHandleHoverTexture.SetPixel(0, 0, Colors.WindowBorderHovered);
             ResizeHandleHoverTexture.Apply();
 
             CloseButtonNormalTexture.SetPixel(0, 0, Colors.CloseButton);
@@ -77,45 +79,29 @@ namespace ConflictSolver.UI
             CloseButtonHoverTexture.SetPixel(0, 0, Colors.CloseButtonHovered);
             CloseButtonHoverTexture.Apply();
 
-            WindowBorderNormalTexture.SetPixel(0, 0, Colors.TitleBarBackground);
+            WindowBorderNormalTexture.SetPixel(0, 0, Colors.WindowBorder);
             WindowBorderNormalTexture.Apply();
 
-            WindowBorderHoverTexture.SetPixel(0, 0, Colors.TitleBarHoveredBackground);
+            WindowBorderHoverTexture.SetPixel(0, 0, Colors.WindowBorderHovered);
             WindowBorderHoverTexture.Apply();
         }
 
         private void InitializeSkin()
         {
-            UnitySkin.box = new GUIStyle(GUI.skin.box);
-            UnitySkin.button = new GUIStyle(GUI.skin.button);
-            UnitySkin.horizontalScrollbar = new GUIStyle(GUI.skin.horizontalScrollbar);
-            UnitySkin.horizontalScrollbarLeftButton = new GUIStyle(GUI.skin.horizontalScrollbarLeftButton);
-            UnitySkin.horizontalScrollbarRightButton = new GUIStyle(GUI.skin.horizontalScrollbarRightButton);
-            UnitySkin.horizontalScrollbarThumb = new GUIStyle(GUI.skin.horizontalScrollbarThumb);
-            UnitySkin.horizontalSlider = new GUIStyle(GUI.skin.horizontalSlider);
-            UnitySkin.horizontalSliderThumb = new GUIStyle(GUI.skin.horizontalSliderThumb);
-            UnitySkin.label = new GUIStyle(GUI.skin.label);
-            UnitySkin.scrollView = new GUIStyle(GUI.skin.scrollView);
-            UnitySkin.textArea = new GUIStyle(GUI.skin.textArea);
-            UnitySkin.textField = new GUIStyle(GUI.skin.textField);
-            UnitySkin.toggle = new GUIStyle(GUI.skin.toggle);
-            UnitySkin.verticalScrollbar = new GUIStyle(GUI.skin.verticalScrollbar);
-            UnitySkin.verticalScrollbarDownButton = new GUIStyle(GUI.skin.verticalScrollbarDownButton);
-            UnitySkin.verticalScrollbarThumb = new GUIStyle(GUI.skin.verticalScrollbarThumb);
-            UnitySkin.verticalScrollbarUpButton = new GUIStyle(GUI.skin.verticalScrollbarUpButton);
-            UnitySkin.verticalSlider = new GUIStyle(GUI.skin.verticalSlider);
-            UnitySkin.verticalSliderThumb = new GUIStyle(GUI.skin.verticalSliderThumb);
-            UnitySkin.window = new GUIStyle(GUI.skin.window);
+            ReflectionTools.CopyPropertyValues<GUISkin, GUIStyle>(UnitySkin, GUI.skin, s => new GUIStyle(s));
+            ReflectionTools.CopyPropertyValues(UnitySkin.settings, GUI.skin.settings);
+
+            UnitySkin.label.wordWrap = false;
+            UnitySkin.label.alignment = TextAnchor.MiddleLeft;
+            UnitySkin.label.stretchHeight = true;
+
+            UnitySkin.button.stretchWidth = false;
+            UnitySkin.button.padding = new RectOffset(4, 4, 2, 2);
+
             UnitySkin.window.normal.background = BackgroundTexture;
             UnitySkin.window.onNormal.background = BackgroundTexture;
 
-            UnitySkin.settings.cursorColor = GUI.skin.settings.cursorColor;
-            UnitySkin.settings.cursorFlashSpeed = GUI.skin.settings.cursorFlashSpeed;
-            UnitySkin.settings.doubleClickSelectsWord = GUI.skin.settings.doubleClickSelectsWord;
-            UnitySkin.settings.selectionColor = GUI.skin.settings.selectionColor;
-            UnitySkin.settings.tripleClickSelectsLine = GUI.skin.settings.tripleClickSelectsLine;
-
-            UnitySkin.font = Font.CreateDynamicFontFromOSFont(Appearance.FontName, Appearance.FontSize);
+            UnitySkin.font = Font.CreateDynamicFontFromOSFont(FontNames, FontSize);
         }
     }
 }

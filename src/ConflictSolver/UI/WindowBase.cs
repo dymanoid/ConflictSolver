@@ -2,6 +2,7 @@
 // Copyright (c) dymanoid. All rights reserved.
 // </copyright>
 
+using System;
 using ConflictSolver.Game;
 using UnityEngine;
 using static ConflictSolver.UI.Appearance;
@@ -42,10 +43,11 @@ namespace ConflictSolver.UI
         /// <param name="title">The title of the window.</param>
         /// <param name="initialBoundaries">The initial window's boundaries.</param>
         /// <param name="resizable">A value indicating whether the window should be resizable.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="title"/> is null.</exception>
         protected WindowBase(string title, Rect initialBoundaries, bool resizable)
         {
+            _title = title ?? throw new ArgumentNullException(nameof(title));
             _windowId = ++LastUsedWindowId;
-            _title = title;
             _windowBoundaries = initialBoundaries;
             _resizable = resizable;
 
@@ -181,36 +183,35 @@ namespace ConflictSolver.UI
                 DrawWindow();
                 _contentArea.End();
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Debug.LogWarning($"{Strings.DebugLogPrefix} has an error drawing the window: {e}");
             }
 
             GUILayout.Space(LargeMargin);
-            DrawBorder();
 
             var mousePosition = GetScreenMousePosition();
+
+            bool resizeHandleHovered = _resizable && DrawResizeHandle(mousePosition);
+            DrawBorder(resizeHandleHovered);
 
             DrawCloseButton(mousePosition);
             DrawTitlebar(mousePosition);
 
-            if (_resizable)
-            {
-                DrawResizeHandle(mousePosition);
-            }
-
             ProcessWindowDrawn();
         }
 
-        private void DrawBorder()
+        private void DrawBorder(bool isHovered)
         {
             var left = new Rect(0f, 0f, WindowBorderWidth, _windowBoundaries.height);
             var right = new Rect(_windowBoundaries.width - WindowBorderWidth, 0f, WindowBorderWidth, _windowBoundaries.height);
             var bottom = new Rect(0f, _windowBoundaries.height - WindowBorderWidth, _windowBoundaries.width, WindowBorderWidth);
 
-            GUI.DrawTexture(left, _skin.WindowBorderNormalTexture);
-            GUI.DrawTexture(right, _skin.WindowBorderNormalTexture);
-            GUI.DrawTexture(bottom, _skin.WindowBorderNormalTexture);
+            var texture = isHovered ? _skin.WindowBorderHoverTexture : _skin.WindowBorderNormalTexture;
+
+            GUI.DrawTexture(left, texture);
+            GUI.DrawTexture(right, texture);
+            GUI.DrawTexture(bottom, texture);
         }
 
         private void DrawTitlebar(Vector2 mousePosition)
@@ -225,8 +226,10 @@ namespace ConflictSolver.UI
             GUI.DrawTexture(new Rect(0f, 0f, _windowBoundaries.width - TitleBarHeight, TitleBarHeight), texture, ScaleMode.StretchToFill);
 
             _titleBarArea.Begin();
-            GUI.contentColor = Colors.TitleBarText;
+
+            GUI.contentColor = Colors.ControlText;
             GUILayout.Label(_title);
+
             _titleBarArea.End();
         }
 
@@ -248,7 +251,7 @@ namespace ConflictSolver.UI
                 ScaleMode.StretchToFill);
         }
 
-        private void DrawResizeHandle(Vector2 mousePosition)
+        private bool DrawResizeHandle(Vector2 mousePosition)
         {
             var resizeHandleBoundaries = new Rect(
                 _windowBoundaries.xMax - LargeMargin,
@@ -256,7 +259,8 @@ namespace ConflictSolver.UI
                 LargeMargin,
                 SmallMargin);
 
-            var texture = ProcessResizing(resizeHandleBoundaries, mousePosition)
+            bool isResizeHandleHovered = ProcessResizing(resizeHandleBoundaries, mousePosition);
+            var texture = isResizeHandleHovered
                 ? _skin.ResizeHandleHoverTexture
                 : _skin.ResizeHandleNormalTexture;
 
@@ -264,6 +268,8 @@ namespace ConflictSolver.UI
                 new Rect(_windowBoundaries.width - LargeMargin, _windowBoundaries.height - SmallMargin, LargeMargin, SmallMargin),
                 texture,
                 ScaleMode.StretchToFill);
+
+            return isResizeHandleHovered;
         }
 
         private bool ProcessClosing(Rect closeButtonBoundaries, Vector2 mousePosition)
