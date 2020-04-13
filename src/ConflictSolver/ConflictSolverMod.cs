@@ -4,6 +4,7 @@
 
 using ConflictSolver.Game;
 using ConflictSolver.Monitor;
+using ConflictSolver.Views;
 using ICities;
 
 namespace ConflictSolver

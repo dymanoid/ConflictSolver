@@ -5,7 +5,7 @@
 using ConflictSolver.UI;
 using UnityEngine;
 
-namespace ConflictSolver
+namespace ConflictSolver.Views
 {
     /// <summary>
     /// The mod's main window.

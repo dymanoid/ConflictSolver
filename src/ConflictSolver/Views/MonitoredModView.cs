@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using ConflictSolver.UI;
 using UnityEngine;
 
-namespace ConflictSolver
+namespace ConflictSolver.Views
 {
     /// <summary>
     /// A helper class for displaying the <see cref="MonitoredModViewModel"/>.

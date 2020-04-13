@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using ConflictSolver.Results;
 using ConflictSolver.Tools;
 
-namespace ConflictSolver
+namespace ConflictSolver.Views
 {
     /// <summary>
     /// A viewmodel for the <see cref="ConflictInfo"/> class.

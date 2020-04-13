@@ -10,7 +10,7 @@ using ConflictSolver.Game;
 using ConflictSolver.Monitor;
 using ConflictSolver.Results;
 
-namespace ConflictSolver
+namespace ConflictSolver.Views
 {
     /// <summary>
     /// The view-model of the main window.
