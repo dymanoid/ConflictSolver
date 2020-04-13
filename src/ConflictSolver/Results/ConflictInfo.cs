@@ -17,7 +17,9 @@ namespace ConflictSolver.Results
         /// </summary>
         /// <param name="modName">The conflicting mod name. Cannot be null or empty.</param>
         /// <param name="memberNames">A collection of members causing the conflict. Cannot be null.</param>
-        public ConflictInfo(string modName, IEnumerable<string> memberNames)
+        /// <exception cref="ArgumentException">Thrown when <paramref name="modName"/> is null or empty.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="memberNames"/> is null.</exception>
+        public ConflictInfo(string modName, ICollection<string> memberNames)
         {
             if (string.IsNullOrEmpty(modName))
             {
@@ -26,6 +28,7 @@ namespace ConflictSolver.Results
 
             ModName = modName;
             MemberNames = memberNames ?? throw new ArgumentNullException(nameof(memberNames));
+            MemberCount = memberNames.Count;
         }
 
         /// <summary>
@@ -37,5 +40,10 @@ namespace ConflictSolver.Results
         /// Gets a collection of member names causing the conflict.
         /// </summary>
         public IEnumerable<string> MemberNames { get; }
+
+        /// <summary>
+        /// Gets the number of items in the <see cref="MemberNames"/> collection.
+        /// </summary>
+        public int MemberCount { get; }
     }
 }

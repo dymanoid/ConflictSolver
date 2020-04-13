@@ -21,11 +21,14 @@ namespace ConflictSolver.Results
         private readonly IDictionary<MemberInfo, HashSet<Type>> _source;
         private readonly IModInfoProvider _modInfoProvider;
 
+        private bool _isConsolidated;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DataView"/> class.
         /// </summary>
         /// <param name="source">The data source to use for this data view.</param>
         /// <param name="modInfoProvider">A service that provides the mod information.</param>
+        /// <exception cref="ArgumentNullException">Thrown when any argument is null.</exception>
         public DataView(IDictionary<MemberInfo, HashSet<Type>> source, IModInfoProvider modInfoProvider)
         {
             _source = source ?? throw new ArgumentNullException(nameof(source));
@@ -33,9 +36,32 @@ namespace ConflictSolver.Results
         }
 
         /// <summary>
-        /// Prepares this data view by consolidating the data from the source.
+        /// Gets the monitored mods this data view stores information about.
         /// </summary>
-        public void Prepare()
+        /// <returns>A collection of <see cref="MonitoredMod"/> objects describing the monitored mods.</returns>
+        public IEnumerable<MonitoredMod> GetMonitoredMods()
+        {
+            if (!_isConsolidated)
+            {
+                Consolidate();
+                _isConsolidated = true;
+            }
+
+            return GetMonitoredModNames().Select(CreateMonitoredMod).ToList();
+        }
+
+        private static void AddItem<TKey, TValue>(IDictionary<TKey, HashSet<TValue>> target, TKey key, TValue value)
+        {
+            if (!target.TryGetValue(key, out var usages))
+            {
+                usages = new HashSet<TValue>();
+                target.Add(key, usages);
+            }
+
+            usages.Add(value);
+        }
+
+        private void Consolidate()
         {
             foreach (var sourceItem in _source)
             {
@@ -51,42 +77,22 @@ namespace ConflictSolver.Results
             }
         }
 
-        /// <summary>
-        /// Gets the names of the mods that have been monitored in this session.
-        /// </summary>
-        /// <returns>A collection of strings representing the mod names.</returns>
-        public IEnumerable<string> GetMonitoredModNames() => _queries.Keys.OrderBy(v => v);
-
-        /// <summary>
-        /// Gets the descriptive names of the members a mod with the specified <paramref name="modName"/> queried
-        /// during the monitoring phase.
-        /// </summary>
-        /// <param name="modName">The name of the mod to get the queried members for.</param>
-        /// <returns>A collection of strings describing the queried members.</returns>
-        public IEnumerable<string> GetQueriedMembers(string modName)
+        private MonitoredMod CreateMonitoredMod(string modName)
         {
-            if (string.IsNullOrEmpty(modName))
-            {
-                throw new ArgumentException("The mod name cannot be null or empty", nameof(modName));
-            }
-
-            return _queries.TryGetValue(modName, out var queriedMembers)
-                ? queriedMembers.Select(m => m.DeclaringType.FullName + " -> " + m.ToString())
-                : Enumerable.Empty<string>();
+            var modQueriedTypes = GetQueriedMembers(modName);
+            var modConflicts = GetConflicts(modName);
+            return new MonitoredMod(modName, modQueriedTypes, modConflicts);
         }
 
-        /// <summary>
-        /// Gets the conflicts information for the specified <paramref name="modName"/>.
-        /// </summary>
-        /// <param name="modName">The name of the mod to get the conflicts information for.</param>
-        /// <returns>A collection of <see cref="ConflictInfo"/> items describing the conflicts.</returns>
-        public IEnumerable<ConflictInfo> GetConflicts(string modName)
-        {
-            if (string.IsNullOrEmpty(modName))
-            {
-                throw new ArgumentException("The mod name cannot be null or empty", nameof(modName));
-            }
+        private IEnumerable<string> GetMonitoredModNames() => _queries.Keys.OrderBy(v => v);
 
+        private IEnumerable<string> GetQueriedMembers(string modName)
+            => _queries.TryGetValue(modName, out var queriedMembers)
+                ? queriedMembers.Select(m => m.ToFullString())
+                : Enumerable.Empty<string>();
+
+        private IEnumerable<ConflictInfo> GetConflicts(string modName)
+        {
             if (!_queries.TryGetValue(modName, out var queriedMembers))
             {
                 return Enumerable.Empty<ConflictInfo>();
@@ -99,23 +105,12 @@ namespace ConflictSolver.Results
                 {
                     foreach (string mod in mods.Where(m => m != modName))
                     {
-                        AddItem(conflicts, mod, member.DeclaringType.FullName + " -> " + member.ToString());
+                        AddItem(conflicts, mod, member.ToFullString());
                     }
                 }
             }
 
             return conflicts.Select(c => new ConflictInfo(c.Key, c.Value));
-        }
-
-        private static void AddItem<TKey, TValue>(IDictionary<TKey, HashSet<TValue>> target, TKey key, TValue value)
-        {
-            if (!target.TryGetValue(key, out var usages))
-            {
-                usages = new HashSet<TValue>();
-                target.Add(key, usages);
-            }
-
-            usages.Add(value);
         }
     }
 }

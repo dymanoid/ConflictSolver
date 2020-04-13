@@ -2,11 +2,8 @@
 // Copyright (c) dymanoid. All rights reserved.
 // </copyright>
 
-using System.Text;
 using ConflictSolver.Game;
 using ConflictSolver.Monitor;
-using ConflictSolver.Results;
-using ConflictSolver.UI;
 using ICities;
 
 namespace ConflictSolver
@@ -30,7 +27,20 @@ namespace ConflictSolver
         /// This method will be called by the game when this mod has to be enabled.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822", Justification = "Will be called by the game")]
-        public void OnEnabled() => GameConnection.GetInstance<MainWindow>();
+        public void OnEnabled()
+        {
+            UnityEngine.Debug.Log($"{Strings.DebugLogPrefix} is now enabled");
+
+            var mainWindow = GameConnection.GetInstance<MainWindow>();
+            if (mainWindow == null)
+            {
+                UnityEngine.Debug.LogWarning($"{Strings.DebugLogPrefix} could not create its main window");
+            }
+            else
+            {
+                mainWindow.DataContext = new MainViewModel();
+            }
+        }
 
         /// <summary>
         /// This method will be called by the game when this mod has to be disabled.
@@ -40,52 +50,6 @@ namespace ConflictSolver
         {
             GameConnection.DestroyInstance<Engine>(e => e.Shutdown());
             GameConnection.DestroyInstance<MainWindow>();
-        }
-
-        /// <summary>
-        /// Called by the game when a map or a city is about to be unloaded.
-        /// </summary>
-        public override void OnLevelUnloading()
-        {
-            var dataSource = Storage.GetData();
-            var modInfoProvider = new ModInfoProvider();
-            var dataView = new DataView(dataSource, modInfoProvider);
-            dataView.Prepare();
-
-            var sb = new StringBuilder();
-
-            sb.Append(Strings.DebugLogPrefix)
-                .AppendLine(" dumps the conflicting mods report...");
-
-            foreach (string mod in dataView.GetMonitoredModNames())
-            {
-                sb.Append("Monitored mod '")
-                    .Append(mod)
-                    .AppendLine("'");
-
-                foreach (string queriedType in dataView.GetQueriedMembers(mod))
-                {
-                    sb.Append(" -> Queried: ")
-                        .AppendLine(queriedType);
-                }
-
-                foreach (var conflict in dataView.GetConflicts(mod))
-                {
-                    sb.Append(" ** Possible conflict with mod '")
-                        .Append(conflict.ModName)
-                        .AppendLine("'");
-
-                    foreach (string member in conflict.MemberNames)
-                    {
-                        sb.Append("    - ")
-                            .AppendLine(member);
-                    }
-                }
-            }
-
-            sb.AppendLine("Report completed.");
-
-            UnityEngine.Debug.Log(sb.ToString());
         }
     }
 }
