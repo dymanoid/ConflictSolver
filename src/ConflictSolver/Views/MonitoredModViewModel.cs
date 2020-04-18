@@ -30,6 +30,7 @@ namespace ConflictSolver.Views
             var conflicts = modInfo.Conflicts.Select(c => new ConflictInfoViewModel(c)).ToList();
             AnyConflicts = conflicts.Count > 0;
             Conflicts = conflicts;
+            QueriedMembers = _modInfo.QueriedMembers.Select(m => m.ToString()).ToList();
         }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace ConflictSolver.Views
         /// <summary>
         /// Gets a collection of member names that have been queried by this mod via Reflection.
         /// </summary>
-        public IEnumerable<string> QueriedMembers => _modInfo.QueriedMembers;
+        public IEnumerable<string> QueriedMembers { get; }
 
         /// <summary>
         /// Gets the collection of the <see cref="ConflictInfoViewModel"/> objects that describe

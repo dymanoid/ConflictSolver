@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Reflection;
 
 namespace ConflictSolver.Game
 {
@@ -18,5 +19,14 @@ namespace ConflictSolver.Game
         /// <param name="anyType">A <see cref="Type"/> that is contained in any assembly of a mod.</param>
         /// <returns>A string describing the mod name, or <c>null</c>.</returns>
         string GetModName(Type anyType);
+
+        /// <summary>
+        /// Determines whether the specified <paramref name="otherAssembly"/> assemblies belong to the same mod
+        /// as the <paramref name="modAssembly"/>.
+        /// </summary>
+        /// <param name="modAssembly">The assembly that belongs to a particular mod.</param>
+        /// <param name="otherAssembly">The other assembly to check.</param>
+        /// <returns><c>true</c> if both assemblies belong to the same mod; otherwise, <c>false</c>.</returns>
+        bool IsSameMod(Assembly modAssembly, Assembly otherAssembly);
     }
 }

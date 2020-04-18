@@ -61,5 +61,17 @@ namespace ConflictSolver.Game
                 return result + " - " + name;
             }
         }
+
+        /// <inheritdoc/>
+        public bool IsSameMod(Assembly modAssembly, Assembly otherAssembly)
+        {
+            if (!_mods.TryGetValue(modAssembly, out var modInfo))
+            {
+                return false;
+            }
+
+            string assemblyName = otherAssembly.GetName().Name;
+            return modInfo.GetAssemblies().Any(a => a.GetName().Name == assemblyName);
+        }
     }
 }

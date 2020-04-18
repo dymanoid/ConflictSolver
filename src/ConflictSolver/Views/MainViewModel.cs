@@ -125,7 +125,7 @@ namespace ConflictSolver.Views
         {
             var dataSource = Storage.GetData();
             var modInfoProvider = new ModInfoProvider();
-            var dataView = new DataView(dataSource, modInfoProvider);
+            var dataView = new DataView(dataSource, modInfoProvider, Storage.AssemblyCheck);
             var data = dataView.GetMonitoredMods().ToList();
             var snapshot = data.Select(m => new MonitoredModViewModel(m)).ToList();
 

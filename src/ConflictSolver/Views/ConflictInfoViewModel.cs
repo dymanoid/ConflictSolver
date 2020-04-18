@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ConflictSolver.Results;
 using ConflictSolver.Tools;
 
@@ -25,6 +26,7 @@ namespace ConflictSolver.Views
         {
             _conflict = conflict ?? throw new ArgumentNullException(nameof(conflict));
             Description = TextTools.GetNumberDescriptionText(conflict.MemberCount, Strings.Member);
+            MemberNames = _conflict.ConflictingMembers.Select(m => m.ToString()).ToList();
         }
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace ConflictSolver.Views
         /// <summary>
         /// Gets a collection of member names causing the conflict.
         /// </summary>
-        public IEnumerable<string> MemberNames => _conflict.MemberNames;
+        public IEnumerable<string> MemberNames { get; }
 
         /// <summary>
         /// Gets the description of this conflict item.

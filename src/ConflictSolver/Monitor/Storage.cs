@@ -5,7 +5,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
+using ConflictSolver.Tools;
 
 namespace ConflictSolver.Monitor
 {
@@ -36,18 +38,22 @@ namespace ConflictSolver.Monitor
         private const int HarmonyStackFramesCount = 3;
 
         private static readonly object SyncObject = new object();
-        private static readonly IAssemblyCheck AssemblyCheck = new AssemblyCheck();
-        private static readonly Dictionary<MemberInfo, HashSet<Type>> Data = new Dictionary<MemberInfo, HashSet<Type>>();
+        private static readonly Dictionary<MemberInfo, TypeAccessActions> Data = new Dictionary<MemberInfo, TypeAccessActions>();
+
+        /// <summary>
+        /// Gets the <see cref="IAssemblyCheck"/> service implementation.
+        /// </summary>
+        public static IAssemblyCheck AssemblyCheck { get; } = new AssemblyCheck();
 
         /// <summary>
         /// Gets the data currently contained in the storage. This method is thread safe.
         /// </summary>
         /// <returns>A copy of the data contained in this storage.</returns>
-        public static IDictionary<MemberInfo, HashSet<Type>> GetData()
+        public static IEnumerable<TypeAccessActions> GetData()
         {
             lock (SyncObject)
             {
-                return new Dictionary<MemberInfo, HashSet<Type>>(Data);
+                return Data.Values.Select(v => v.Clone()).ToList();
             }
         }
 
@@ -67,7 +73,7 @@ namespace ConflictSolver.Monitor
         {
             if (__result != null)
             {
-                Store(__result);
+                Store(__result, AccessTypes.Query);
             }
         }
 
@@ -76,7 +82,7 @@ namespace ConflictSolver.Monitor
         {
             if (__result != null)
             {
-                Store(__result);
+                Store(__result, AccessTypes.Query);
             }
         }
 
@@ -85,11 +91,11 @@ namespace ConflictSolver.Monitor
         {
             if (__result != null)
             {
-                Store(__result);
+                Store(__result, AccessTypes.Query);
             }
         }
 
-        private static void Store(MemberInfo memberInfo)
+        private static void Store(MemberInfo memberInfo, AccessTypes accessTypes)
         {
             var memberAssembly = memberInfo.DeclaringType.Assembly;
 
@@ -111,42 +117,32 @@ namespace ConflictSolver.Monitor
                 return;
             }
 
-            var callerType = GetModTypeFromStackTrace(stackTrace);
-            if (callerType == null)
+            var accessorType = GetModTypeFromStackTrace(stackTrace);
+            if (accessorType == null)
             {
                 return;
             }
 
             lock (SyncObject)
             {
-                if (!Data.TryGetValue(memberInfo, out var requestingTypes))
-                {
-                    requestingTypes = new HashSet<Type>();
-                    Data.Add(memberInfo, requestingTypes);
-                }
-
-                requestingTypes.Add(callerType);
+                var accessActions = Data.GetOrAdd(memberInfo, () => new TypeAccessActions(memberInfo));
+                accessActions.StoreAccess(accessorType, accessTypes);
             }
         }
 
         private static Type GetModTypeFromStackTrace(StackTrace stackTrace)
         {
-            Type callerType = null;
-            for (int i = 1; i < stackTrace.FrameCount; ++i)
+            for (int i = stackTrace.FrameCount - 1; i >= 0; --i)
             {
                 var frame = stackTrace.GetFrame(i);
                 var frameCallerType = frame.GetMethod().DeclaringType;
                 if (AssemblyCheck.IsUserModAssembly(frameCallerType.Assembly))
                 {
-                    callerType = frameCallerType;
-                }
-                else if (callerType != null)
-                {
-                    break;
+                    return frameCallerType;
                 }
             }
 
-            return callerType;
+            return null;
         }
     }
 }

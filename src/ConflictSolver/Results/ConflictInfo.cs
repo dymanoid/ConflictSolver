@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConflictSolver.Results
 {
@@ -16,19 +17,26 @@ namespace ConflictSolver.Results
         /// Initializes a new instance of the <see cref="ConflictInfo"/> class.
         /// </summary>
         /// <param name="modName">The conflicting mod name. Cannot be null or empty.</param>
-        /// <param name="memberNames">A collection of members causing the conflict. Cannot be null.</param>
+        /// <param name="members">A collection of members causing the conflict. Cannot be null.</param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="modName"/> is null or empty.</exception>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="memberNames"/> is null.</exception>
-        public ConflictInfo(string modName, ICollection<string> memberNames)
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="members"/> is null.</exception>
+        public ConflictInfo(string modName, IEnumerable<MemberAccessInfo> members)
         {
             if (string.IsNullOrEmpty(modName))
             {
                 throw new ArgumentException("The mod name cannot be null or empty", nameof(modName));
             }
 
+            if (members is null)
+            {
+                throw new ArgumentNullException(nameof(members));
+            }
+
             ModName = modName;
-            MemberNames = memberNames ?? throw new ArgumentNullException(nameof(memberNames));
-            MemberCount = memberNames.Count;
+
+            var memberList = members.ToList();
+            ConflictingMembers = memberList;
+            MemberCount = memberList.Count;
         }
 
         /// <summary>
@@ -39,10 +47,10 @@ namespace ConflictSolver.Results
         /// <summary>
         /// Gets a collection of member names causing the conflict.
         /// </summary>
-        public IEnumerable<string> MemberNames { get; }
+        public IEnumerable<MemberAccessInfo> ConflictingMembers { get; }
 
         /// <summary>
-        /// Gets the number of items in the <see cref="MemberNames"/> collection.
+        /// Gets the number of items in the <see cref="ConflictingMembers"/> collection.
         /// </summary>
         public int MemberCount { get; }
     }

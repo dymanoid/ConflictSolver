@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ConflictSolver.Game;
+using ConflictSolver.Monitor;
+using ConflictSolver.Tools;
 
 namespace ConflictSolver.Results
 {
@@ -15,12 +17,12 @@ namespace ConflictSolver.Results
     /// </summary>
     internal sealed class DataView
     {
-        private readonly Dictionary<MemberInfo, HashSet<string>> _usages = new Dictionary<MemberInfo, HashSet<string>>();
-        private readonly Dictionary<string, HashSet<MemberInfo>> _queries = new Dictionary<string, HashSet<MemberInfo>>();
+        private readonly Dictionary<MemberInfo, ModAccessActions> _usages = new Dictionary<MemberInfo, ModAccessActions>();
+        private readonly Dictionary<string, MemberAccessActions> _queries = new Dictionary<string, MemberAccessActions>();
 
-        private readonly IDictionary<MemberInfo, HashSet<Type>> _source;
+        private readonly IEnumerable<TypeAccessActions> _source;
         private readonly IModInfoProvider _modInfoProvider;
-
+        private readonly IAssemblyCheck _assemblyCheck;
         private bool _isConsolidated;
 
         /// <summary>
@@ -28,11 +30,13 @@ namespace ConflictSolver.Results
         /// </summary>
         /// <param name="source">The data source to use for this data view.</param>
         /// <param name="modInfoProvider">A service that provides the mod information.</param>
+        /// <param name="assemblyCheck">An <see cref="IAssemblyCheck"/> service implementation.</param>
         /// <exception cref="ArgumentNullException">Thrown when any argument is null.</exception>
-        public DataView(IDictionary<MemberInfo, HashSet<Type>> source, IModInfoProvider modInfoProvider)
+        public DataView(IEnumerable<TypeAccessActions> source, IModInfoProvider modInfoProvider, IAssemblyCheck assemblyCheck)
         {
             _source = source ?? throw new ArgumentNullException(nameof(source));
             _modInfoProvider = modInfoProvider ?? throw new ArgumentNullException(nameof(modInfoProvider));
+            _assemblyCheck = assemblyCheck ?? throw new ArgumentNullException(nameof(assemblyCheck));
         }
 
         /// <summary>
@@ -50,46 +54,63 @@ namespace ConflictSolver.Results
             return GetMonitoredModNames().Select(CreateMonitoredMod).ToList();
         }
 
-        private static void AddItem<TKey, TValue>(IDictionary<TKey, HashSet<TValue>> target, TKey key, TValue value)
-        {
-            if (!target.TryGetValue(key, out var usages))
-            {
-                usages = new HashSet<TValue>();
-                target.Add(key, usages);
-            }
-
-            usages.Add(value);
-        }
-
         private void Consolidate()
         {
-            foreach (var sourceItem in _source)
+            foreach (var accessActions in _source)
             {
-                var queriedMember = sourceItem.Key;
-                var requestingTypes = sourceItem.Value;
-
-                foreach (var type in requestingTypes)
+                foreach (var accessAction in accessActions.GetAllActions())
                 {
-                    string modName = _modInfoProvider.GetModName(type);
-                    AddItem(_usages, queriedMember, modName);
-                    AddItem(_queries, modName, queriedMember);
+                    var accessedMember = accessActions.AccessedMember;
+                    string modName = _modInfoProvider.GetModName(accessAction.Accessor);
+                    var accessTypes = accessAction.AccessTypes;
+
+                    var modAccessActions = _usages.GetOrAdd(
+                        accessedMember, () => new ModAccessActions(accessedMember));
+
+                    modAccessActions.StoreAccess(modName, accessTypes);
+
+                    var memberAccessAction = _queries.GetOrAdd(
+                        modName, () => new MemberAccessActions(modName));
+
+                    var accessTarget = GetAccessTarget(accessedMember.DeclaringType.Assembly, accessAction.Accessor.Assembly);
+                    memberAccessAction.StoreAccess(accessedMember, accessTarget, accessTypes);
                 }
             }
         }
 
+        private AccessTarget GetAccessTarget(Assembly accessedAssembly, Assembly accessorAssembly)
+        {
+            if (_assemblyCheck.IsGameAssembly(accessedAssembly))
+            {
+                return AccessTarget.Game;
+            }
+
+            if (_modInfoProvider.IsSameMod(accessorAssembly, accessedAssembly))
+            {
+                return AccessTarget.OwnMod;
+            }
+
+            if (_assemblyCheck.IsUserModAssembly(accessedAssembly))
+            {
+                return AccessTarget.ForeignMod;
+            }
+
+            return AccessTarget.Unknown;
+        }
+
         private MonitoredMod CreateMonitoredMod(string modName)
         {
-            var modQueriedTypes = GetQueriedMembers(modName);
+            var queriedMembers = GetQueriedMembers(modName);
             var modConflicts = GetConflicts(modName);
-            return new MonitoredMod(modName, modQueriedTypes, modConflicts);
+            return new MonitoredMod(modName, queriedMembers, modConflicts);
         }
 
         private IEnumerable<string> GetMonitoredModNames() => _queries.Keys.OrderBy(v => v);
 
-        private IEnumerable<string> GetQueriedMembers(string modName)
+        private IEnumerable<MemberAccessInfo> GetQueriedMembers(string modName)
             => _queries.TryGetValue(modName, out var queriedMembers)
-                ? queriedMembers.Select(m => m.ToFullString())
-                : Enumerable.Empty<string>();
+                ? queriedMembers.GetMembers()
+                : Enumerable.Empty<MemberAccessInfo>();
 
         private IEnumerable<ConflictInfo> GetConflicts(string modName)
         {
@@ -98,19 +119,23 @@ namespace ConflictSolver.Results
                 return Enumerable.Empty<ConflictInfo>();
             }
 
-            var conflicts = new Dictionary<string, HashSet<string>>();
-            foreach (var member in queriedMembers)
+            var conflictingMods = new Dictionary<string, MemberAccessActions>();
+            foreach (var member in queriedMembers.GetMembers())
             {
-                if (_usages.TryGetValue(member, out var mods))
+                if (_usages.TryGetValue(member.Member, out var accessingMods))
                 {
-                    foreach (string mod in mods.Where(m => m != modName))
+                    foreach (string conflictingMod in accessingMods.GetModNames())
                     {
-                        AddItem(conflicts, mod, member.ToFullString());
+                        var memberAccessAction = conflictingMods.GetOrAdd(
+                            conflictingMod, () => new MemberAccessActions(conflictingMod));
+
+                        memberAccessAction.StoreAccess(member.Member, member.AccessTarget, member.AccessTypes);
                     }
                 }
             }
 
-            return conflicts.Select(c => new ConflictInfo(c.Key, c.Value));
+            conflictingMods.Remove(modName);
+            return conflictingMods.Select(v => new ConflictInfo(v.Key, v.Value.GetMembers()));
         }
     }
 }

@@ -22,7 +22,7 @@ namespace ConflictSolver.Results
         /// <exception cref="ArgumentException">Thrown when <paramref name="modName"/> is null or empty.</exception>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="queriedMembers"/>
         /// or <paramref name="conflicts"/> is null.</exception>
-        public MonitoredMod(string modName, IEnumerable<string> queriedMembers, IEnumerable<ConflictInfo> conflicts)
+        public MonitoredMod(string modName, IEnumerable<MemberAccessInfo> queriedMembers, IEnumerable<ConflictInfo> conflicts)
         {
             if (string.IsNullOrEmpty(modName))
             {
@@ -68,7 +68,7 @@ namespace ConflictSolver.Results
         /// <summary>
         /// Gets a collection of member names that have been queried by this mod via Reflection.
         /// </summary>
-        public IEnumerable<string> QueriedMembers { get; }
+        public IEnumerable<MemberAccessInfo> QueriedMembers { get; }
 
         /// <summary>
         /// Gets the number of items in the <see cref="QueriedMembers"/> collection.
