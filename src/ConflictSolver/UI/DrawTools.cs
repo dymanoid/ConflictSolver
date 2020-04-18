@@ -19,14 +19,8 @@ namespace ConflictSolver.UI
         /// using the <see cref="GUILayout"/> tools.
         /// </summary>
         /// <param name="content">A delegate that lays out the content.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="content"/> is null.</exception>
         public static void CenterInArea(Action content)
         {
-            if (content is null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
-
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.BeginVertical();
@@ -73,16 +67,6 @@ namespace ConflictSolver.UI
         /// <returns>A value indicating the expander is currently expanded.</returns>
         public static bool DrawExpander(Action header, bool expanded, Action<float> content, float indent)
         {
-            if (header is null)
-            {
-                throw new ArgumentNullException(nameof(header));
-            }
-
-            if (content is null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
-
             GUILayout.BeginHorizontal(GUILayout.ExpandHeight(false));
 
             GUILayout.Space(indent);

@@ -2,7 +2,6 @@
 // Copyright (c) dymanoid. All rights reserved.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
 using ConflictSolver.UI;
 using UnityEngine;
@@ -19,20 +18,12 @@ namespace ConflictSolver.Views
         /// in the current area.
         /// </summary>
         /// <param name="mod">A <see cref="MonitoredModViewModel"/> instance to display.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="mod"/> is null.</exception>
         public static void DrawModView(MonitoredModViewModel mod)
-        {
-            if (mod is null)
-            {
-                throw new ArgumentNullException(nameof(mod));
-            }
-
-            mod.IsExpanded = DrawTools.DrawExpander(
+            => mod.IsExpanded = DrawTools.DrawExpander(
                 () => DrawItemHeader(mod.ModName, mod.Description),
                 mod.IsExpanded,
                 _ => DrawModItemContent(mod, Appearance.LargeMargin),
                 0f);
-        }
 
         private static void DrawModItemContent(MonitoredModViewModel mod, float indent)
         {

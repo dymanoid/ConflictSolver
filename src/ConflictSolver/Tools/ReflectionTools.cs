@@ -23,25 +23,9 @@ namespace ConflictSolver.Tools
         /// <param name="target">The target instance that will get the copied values.</param>
         /// <param name="source">The source instance that will provide the values for copying.</param>
         /// <param name="valueFactory">A delegate that will be used to create a copy of a property value.</param>
-        /// <exception cref="ArgumentNullException">Thrown when any argument is null.</exception>
         public static void CopyPropertyValues<TClass, TProperty>(
             TClass target, TClass source, Func<TProperty, TProperty> valueFactory)
         {
-            if (target == null)
-            {
-                throw new ArgumentNullException(nameof(target));
-            }
-
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (valueFactory == null)
-            {
-                throw new ArgumentNullException(nameof(valueFactory));
-            }
-
             var properties = typeof(TClass).GetProperties()
                 .Where(p => p.CanRead && p.CanWrite && p.PropertyType == typeof(TProperty));
 
@@ -63,19 +47,8 @@ namespace ConflictSolver.Tools
         /// <typeparam name="T">The type of the <paramref name="source"/> and <paramref name="target"/> instances.</typeparam>
         /// <param name="target">The target instance that will get the copied values.</param>
         /// <param name="source">The source instance that will provide the values for copying.</param>
-        /// <exception cref="ArgumentNullException">Thrown when any argument is null.</exception>
         public static void CopyPropertyValues<T>(T target, T source)
         {
-            if (target == null)
-            {
-                throw new ArgumentNullException(nameof(target));
-            }
-
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
             var properties = typeof(T).GetProperties().Where(p => p.CanRead && p.CanWrite);
             foreach (var property in properties)
             {

@@ -2,7 +2,6 @@
 // Copyright (c) dymanoid. All rights reserved.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,14 +18,8 @@ namespace ConflictSolver.Results
         /// <param name="snapshot">A collection of the <see cref="MonitoredMod"/> instances
         /// representing a snapshot.</param>
         /// <returns>A string that contains the text representation of the snapshot data.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <paramref name="snapshot"/> is null.</exception>
         public static string SnapshotToString(IEnumerable<MonitoredMod> snapshot)
         {
-            if (snapshot is null)
-            {
-                throw new ArgumentNullException(nameof(snapshot));
-            }
-
             var sb = new StringBuilder();
 
             foreach (var mod in snapshot)
