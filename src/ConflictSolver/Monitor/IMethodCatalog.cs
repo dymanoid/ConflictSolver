@@ -20,21 +20,11 @@ namespace ConflictSolver.Monitor
         IEnumerable<MethodInfo> GetAllMethods();
 
         /// <summary>
-        /// Gets the <see cref="MethodInfo"/> descriptors of the <see cref="Type.GetField"/> overloads.
+        /// Gets the <see cref="MethodInfo"/> descriptors of the methods that generate
+        /// the monitored <paramref name="reflectionData"/>.
         /// </summary>
+        /// <param name="reflectionData">The type of the reflection data of interest.</param>
         /// <returns>A collection of the <see cref="MethodInfo"/> objects.</returns>
-        IEnumerable<MethodInfo> GetMethodsForFieldQuery();
-
-        /// <summary>
-        /// Gets the <see cref="MethodInfo"/> descriptors of the <see cref="Type.GetMethod"/> overloads.
-        /// </summary>
-        /// <returns>A collection of the <see cref="MethodInfo"/> objects.</returns>
-        IEnumerable<MethodInfo> GetMethodsForMethodQuery();
-
-        /// <summary>
-        /// Gets the <see cref="MethodInfo"/> descriptors of the <see cref="Type.GetProperty"/> overloads.
-        /// </summary>
-        /// <returns>A collection of the <see cref="MethodInfo"/> objects.</returns>
-        IEnumerable<MethodInfo> GetMethodsForPropertyQuery();
+        IEnumerable<MethodInfo> GetMethods(ReflectionData reflectionData);
     }
 }

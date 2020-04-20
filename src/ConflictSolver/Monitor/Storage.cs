@@ -18,21 +18,6 @@ namespace ConflictSolver.Monitor
     internal static class Storage
     {
         /// <summary>
-        /// The name of the method that serves as the <see cref="MethodInfo"/> data collection sink.
-        /// </summary>
-        public const string MethodInfoCollectorName = nameof(StoreMethodInfo);
-
-        /// <summary>
-        /// The name of the method that serves as the <see cref="FieldInfo"/> data collection sink.
-        /// </summary>
-        public const string FieldInfoCollectorName = nameof(StoreFieldInfo);
-
-        /// <summary>
-        /// The name of the method that serves as the <see cref="PropertyInfo"/> data collection sink.
-        /// </summary>
-        public const string PropertyInfoCollectorName = nameof(StorePropertyInfo);
-
-        /// <summary>
         /// The number of stack frames occupied by the patching helper methods of Harmony library itself.
         /// </summary>
         private const int HarmonyStackFramesCount = 3;
@@ -44,6 +29,64 @@ namespace ConflictSolver.Monitor
         /// Gets the <see cref="IAssemblyCheck"/> service implementation.
         /// </summary>
         public static IAssemblyCheck AssemblyCheck { get; } = new AssemblyCheck();
+
+        /// <summary>
+        /// Gets the <see cref="MethodInfo"/> descriptor of a method that can be used for storing
+        /// the information about the specified <paramref name="reflectionData"/>.
+        /// </summary>
+        /// <param name="reflectionData">The reflection data type of interest.</param>
+        /// <returns>A <see cref="MethodInfo"/> descriptor of a method of this class.</returns>
+        public static MethodInfo GetMethod(ReflectionData reflectionData)
+        {
+            string methodName;
+            switch (reflectionData)
+            {
+                case ReflectionData.MethodInfo:
+                    methodName = nameof(StoreMethodInfo);
+                    break;
+
+                case ReflectionData.MethodInfoMultiple:
+                    methodName = nameof(StoreMethodInfos);
+                    break;
+
+                case ReflectionData.FieldInfo:
+                    methodName = nameof(StoreFieldInfo);
+                    break;
+
+                case ReflectionData.FieldInfoMultiple:
+                    methodName = nameof(StoreFieldInfos);
+                    break;
+
+                case ReflectionData.FieldInfoValueRead:
+                    methodName = nameof(StoreFieldInfoValueRead);
+                    break;
+
+                case ReflectionData.FieldInfoValueWrite:
+                    methodName = nameof(StoreFieldInfoValueWrite);
+                    break;
+
+                case ReflectionData.PropertyInfo:
+                    methodName = nameof(StorePropertyInfo);
+                    break;
+
+                case ReflectionData.PropertyInfoMultiple:
+                    methodName = nameof(StorePropertyInfos);
+                    break;
+
+                case ReflectionData.PropertyInfoValueRead:
+                    methodName = nameof(StorePropertyInfoValueRead);
+                    break;
+
+                case ReflectionData.PropertyInfoValueWrite:
+                    methodName = nameof(StorePropertyInfoValueWrite);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(reflectionData), "Unsupported reflection data type");
+            }
+
+            return typeof(Storage).GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic);
+        }
 
         /// <summary>
         /// Gets the data currently contained in the storage. This method is thread safe.
@@ -78,11 +121,35 @@ namespace ConflictSolver.Monitor
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006", Justification = "Harmony patch")]
+        private static void StoreMethodInfos(MethodInfo[] __result)
+        {
+            if (__result?.Length > 0)
+            {
+                foreach (var method in __result)
+                {
+                    Store(method, AccessTypes.Query);
+                }
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006", Justification = "Harmony patch")]
         private static void StoreFieldInfo(FieldInfo __result)
         {
             if (__result != null)
             {
                 Store(__result, AccessTypes.Query);
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006", Justification = "Harmony patch")]
+        private static void StoreFieldInfos(FieldInfo[] __result)
+        {
+            if (__result?.Length > 0)
+            {
+                foreach (var field in __result)
+                {
+                    Store(field, AccessTypes.Query);
+                }
             }
         }
 
@@ -94,6 +161,30 @@ namespace ConflictSolver.Monitor
                 Store(__result, AccessTypes.Query);
             }
         }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006", Justification = "Harmony patch")]
+        private static void StorePropertyInfos(PropertyInfo[] __result)
+        {
+            if (__result?.Length > 0)
+            {
+                foreach (var property in __result)
+                {
+                    Store(property, AccessTypes.Query);
+                }
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006", Justification = "Harmony patch")]
+        private static void StorePropertyInfoValueRead(PropertyInfo __instance) => Store(__instance, AccessTypes.Read);
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006", Justification = "Harmony patch")]
+        private static void StorePropertyInfoValueWrite(PropertyInfo __instance) => Store(__instance, AccessTypes.Write);
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006", Justification = "Harmony patch")]
+        private static void StoreFieldInfoValueRead(FieldInfo __instance) => Store(__instance, AccessTypes.Read);
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006", Justification = "Harmony patch")]
+        private static void StoreFieldInfoValueWrite(FieldInfo __instance) => Store(__instance, AccessTypes.Write);
 
         private static void Store(MemberInfo memberInfo, AccessTypes accessTypes)
         {

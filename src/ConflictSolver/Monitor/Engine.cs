@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Harmony;
 using UnityEngine;
@@ -34,16 +35,12 @@ namespace ConflictSolver.Monitor
                 return;
             }
 
-            var storageType = typeof(Storage);
-
-            var postfixMethod = storageType.GetMethod(Storage.MethodInfoCollectorName, BindingFlags.NonPublic | BindingFlags.Static);
-            PatchWithPostfix(_methodCatalog.GetMethodsForMethodQuery(), postfixMethod);
-
-            postfixMethod = storageType.GetMethod(Storage.FieldInfoCollectorName, BindingFlags.NonPublic | BindingFlags.Static);
-            PatchWithPostfix(_methodCatalog.GetMethodsForFieldQuery(), postfixMethod);
-
-            postfixMethod = storageType.GetMethod(Storage.PropertyInfoCollectorName, BindingFlags.NonPublic | BindingFlags.Static);
-            PatchWithPostfix(_methodCatalog.GetMethodsForPropertyQuery(), postfixMethod);
+            foreach (var reflectionData in Enum.GetValues(typeof(ReflectionData)).Cast<ReflectionData>().Skip(1))
+            {
+                var methods = _methodCatalog.GetMethods(reflectionData);
+                var postfixMethod = Storage.GetMethod(reflectionData);
+                PatchWithPostfix(methods, postfixMethod);
+            }
 
             _isRunning = true;
             Debug.Log($"{Strings.DebugLogPrefix} initialized the monitoring patches");
