@@ -67,6 +67,11 @@ namespace ConflictSolver.UI
         public static readonly string[] FontNames = { "Segoe UI", "Arial" };
 
         /// <summary>
+        /// The monotype font names for the UI. The first existing font from this list will be applied.
+        /// </summary>
+        public static readonly string[] MonotypeFontNames = { "Consolas", "Courier New" };
+
+        /// <summary>
         /// Gets default boundaries of the mod's window.
         /// </summary>
         public static Rect DefaultWindowBoundaries { get; } = new Rect(200f, 200f, 640f, 480f);

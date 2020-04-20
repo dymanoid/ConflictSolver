@@ -45,6 +45,7 @@ namespace ConflictSolver.Results
             ConflictCount = conflictList.Count;
 
             var queriesList = queriedMembers.ToList();
+            queriesList.Sort();
             QueriedMembers = queriesList;
             QueriesCount = queriesList.Count;
         }

@@ -129,7 +129,8 @@ namespace ConflictSolver.UI
         /// <summary>
         /// When overridden in derived classes, performs the drawing of the window's content.
         /// </summary>
-        protected abstract void DrawWindow();
+        /// <param name="skin">The skin this window is being drawn in.</param>
+        protected abstract void DrawWindow(WindowSkin skin);
 
         /// <summary>
         /// When overridden in derived classes, performs actions after the window was completely drawn.
@@ -180,7 +181,7 @@ namespace ConflictSolver.UI
             try
             {
                 _contentArea.Begin();
-                DrawWindow();
+                DrawWindow(_skin);
                 _contentArea.End();
             }
             catch (Exception e)

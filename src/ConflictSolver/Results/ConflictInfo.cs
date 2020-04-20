@@ -35,6 +35,7 @@ namespace ConflictSolver.Results
             ModName = modName;
 
             var memberList = members.ToList();
+            memberList.Sort();
             ConflictingMembers = memberList;
             MemberCount = memberList.Count;
         }

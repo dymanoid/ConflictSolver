@@ -5,13 +5,14 @@
 using System;
 using System.Reflection;
 using ConflictSolver.Monitor;
+using ConflictSolver.Tools;
 
 namespace ConflictSolver.Results
 {
     /// <summary>
     /// A description of a single member access action.
     /// </summary>
-    internal readonly struct MemberAccessInfo : IEquatable<MemberAccessInfo>
+    internal readonly struct MemberAccessInfo : IEquatable<MemberAccessInfo>, IComparable<MemberAccessInfo>
     {
         private readonly string _string;
 
@@ -24,21 +25,15 @@ namespace ConflictSolver.Results
         public MemberAccessInfo(MemberInfo member, AccessTarget accessTarget, AccessTypes accessTypes)
         {
             Member = member ?? throw new ArgumentNullException(nameof(member));
-            MemberName = member.ToFullString();
             AccessTarget = accessTarget;
             AccessTypes = accessTypes;
-            _string = $"[{accessTarget}] [{accessTypes}] {MemberName}";
+            _string = $"[{accessTarget,10}] [{accessTypes,18}] {member.ToFullString()}";
         }
 
         /// <summary>
         /// Gets the member being accessed.
         /// </summary>
         public MemberInfo Member { get; }
-
-        /// <summary>
-        /// Gets the string representation of the member being accessed.
-        /// </summary>
-        public string MemberName { get; }
 
         /// <summary>
         /// Gets the access target of the <see cref="Member"/>.
@@ -49,6 +44,25 @@ namespace ConflictSolver.Results
         /// Gets the access types of this access action.
         /// </summary>
         public AccessTypes AccessTypes { get; }
+
+        /// <inheritdoc/>
+        public int CompareTo(MemberAccessInfo other)
+        {
+            int result = Member.DeclaringType.Assembly.FullName.CompareTo(other.Member.DeclaringType.Assembly.FullName);
+            if (result != 0)
+            {
+                return result;
+            }
+
+            result = Member.DeclaringType.Name.CompareTo(other.Member.DeclaringType.Name);
+            if (result != 0)
+            {
+                return result;
+            }
+
+            result = Member.Name.CompareTo(other.Member.Name);
+            return result != 0 ? result : AccessTypes.CompareTo(other.AccessTypes);
+        }
 
         /// <inheritdoc/>
         public bool Equals(MemberAccessInfo other)

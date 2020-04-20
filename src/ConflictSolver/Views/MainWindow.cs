@@ -14,6 +14,7 @@ namespace ConflictSolver.Views
     internal sealed class MainWindow : WindowBase<MainViewModel>
     {
         private Vector2 _scrollPosition;
+        private GUIStyle _monotypeLabelStyle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -37,7 +38,8 @@ namespace ConflictSolver.Views
         /// <summary>
         /// Draws the GUI elements of this window.
         /// </summary>
-        protected override void DrawWindow()
+        /// <param name="skin">The skin this window is being drawn in.</param>
+        protected override void DrawWindow(WindowSkin skin)
         {
             if (DataContext == null)
             {
@@ -54,6 +56,14 @@ namespace ConflictSolver.Views
             {
                 DrawTools.CenterInArea(DrawSnapshotButton);
                 return;
+            }
+
+            if (_monotypeLabelStyle is null)
+            {
+                _monotypeLabelStyle = new GUIStyle(skin.UnitySkin.label)
+                {
+                    font = Font.CreateDynamicFontFromOSFont(Appearance.MonotypeFontNames, Appearance.FontSize),
+                };
             }
 
             GUILayout.BeginVertical();
@@ -116,7 +126,7 @@ namespace ConflictSolver.Views
 
             foreach (var mod in DataContext.Snapshot)
             {
-                MonitoredModView.DrawModView(mod);
+                MonitoredModView.DrawModView(mod, _monotypeLabelStyle);
             }
 
             GUILayout.FlexibleSpace();

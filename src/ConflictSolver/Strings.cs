@@ -50,6 +50,11 @@ namespace ConflictSolver
         public const string PossibleModConflicts = "Possible Mod Conflicts";
 
         /// <summary>
+        /// The 'none' text for the mod conflicts section caption.
+        /// </summary>
+        public const string None = "None";
+
+        /// <summary>
         /// The 'processing' status string.
         /// </summary>
         public const string Processing = "Processing...";

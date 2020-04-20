@@ -28,15 +28,11 @@ namespace ConflictSolver.Results
                     .Append(mod.ModName)
                     .AppendLine("'");
 
-                sb.Append(" -> Queried following members: ");
+                sb.AppendLine(" -> Queried following members:");
 
                 foreach (var queriedMember in mod.QueriedMembers)
                 {
-                    sb.Append(queriedMember.AccessTarget)
-                        .Append(" - ")
-                        .Append(queriedMember.AccessTypes)
-                        .Append(" - ")
-                        .AppendLine(queriedMember.MemberName);
+                    sb.AppendLine(queriedMember.ToString());
                 }
 
                 foreach (var conflict in mod.Conflicts)
@@ -48,11 +44,7 @@ namespace ConflictSolver.Results
                     foreach (var member in conflict.ConflictingMembers)
                     {
                         sb.Append("    - ")
-                            .Append(member.AccessTarget)
-                            .Append(" - ")
-                            .Append(member.AccessTypes)
-                            .Append(" - ")
-                            .AppendLine(member.MemberName);
+                            .AppendLine(member.ToString());
                     }
                 }
             }
