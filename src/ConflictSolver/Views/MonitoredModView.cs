@@ -25,6 +25,7 @@ namespace ConflictSolver.Views
         public static void DrawModView(MonitoredModViewModel mod, GUIStyle monotypeLabelStyle)
             => mod.IsExpanded = DrawTools.DrawExpander(
                 () => DrawItemHeader(mod.ModName, mod.Description),
+                enabled: true,
                 mod.IsExpanded,
                 _ => DrawModItemContent(mod, Appearance.LargeMargin, monotypeLabelStyle),
                 0f);
@@ -35,6 +36,7 @@ namespace ConflictSolver.Views
 
             mod.IsReflectionListExpanded = DrawTools.DrawExpander(
                 () => DrawItemHeader(Strings.ReflectionQueries, mod.QueriesDescription),
+                mod.AnyQueries,
                 mod.IsReflectionListExpanded,
                 i => DrawStringList(mod.QueriedMembers, i, monotypeLabelStyle),
                 indent);
@@ -63,6 +65,7 @@ namespace ConflictSolver.Views
             {
                 conflict.IsExpanded = DrawTools.DrawExpander(
                     () => DrawItemHeader(conflict.ModName, conflict.Description),
+                    conflict.AnyMembers,
                     conflict.IsExpanded,
                     i => DrawStringList(conflict.MemberNames, i, monotypeLabelStyle),
                     indent);

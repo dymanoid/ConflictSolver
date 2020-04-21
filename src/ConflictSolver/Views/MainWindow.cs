@@ -108,6 +108,8 @@ namespace ConflictSolver.Views
                 DataContext.CopyToClipboard();
             }
 
+            GUILayout.Space(Appearance.LargeMargin);
+            DataContext.ShowOwnModQueries = GUILayout.Toggle(DataContext.ShowOwnModQueries, Strings.ShowOwnModQueries);
             GUILayout.FlexibleSpace();
 
             actionRequested = DrawTools.DrawButton(Strings.DeleteSnapshot);
@@ -117,7 +119,7 @@ namespace ConflictSolver.Views
             }
 
             GUILayout.EndHorizontal();
-            GUILayout.Space(10);
+            GUILayout.Space(Appearance.LargeMargin);
         }
 
         private void DrawSnapshotResults()

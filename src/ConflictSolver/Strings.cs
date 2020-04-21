@@ -83,5 +83,10 @@ namespace ConflictSolver
         /// The 'delete snapshot' button caption.
         /// </summary>
         public const string DeleteSnapshot = "Delete Snapshot";
+
+        /// <summary>
+        /// The 'Show own mod queries' check box caption.
+        /// </summary>
+        public const string ShowOwnModQueries = "Show Reflection Queries of Types in same Mod";
     }
 }

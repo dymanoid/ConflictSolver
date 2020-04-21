@@ -34,12 +34,12 @@ namespace ConflictSolver.UI
         /// <summary>
         /// The minimum width of the window.
         /// </summary>
-        public const float MinimumWindowWidth = 320f;
+        public const float MinimumWindowWidth = 820f;
 
         /// <summary>
         /// The minimum height of the window.
         /// </summary>
-        public const float MinimumWindowHeight = 240f;
+        public const float MinimumWindowHeight = 480f;
 
         /// <summary>
         /// The default button height.
@@ -74,6 +74,6 @@ namespace ConflictSolver.UI
         /// <summary>
         /// Gets default boundaries of the mod's window.
         /// </summary>
-        public static Rect DefaultWindowBoundaries { get; } = new Rect(200f, 200f, 640f, 480f);
+        public static Rect DefaultWindowBoundaries { get; } = new Rect(100f, 100f, MinimumWindowWidth, MinimumWindowHeight);
     }
 }

@@ -50,29 +50,35 @@ namespace ConflictSolver.UI
         /// The width and the height of the button is defined by the <see cref="ButtonHeight"/> value.
         /// </summary>
         /// <param name="caption">The caption of the button.</param>
+        /// <param name="isEnabled"><c>true</c> if the button is enabled; otherwise, <c>false</c>.</param>
         /// <returns><c>true</c> if the button was pressed; otherwise, <c>false</c>.</returns>
-        public static bool DrawSquareButton(string caption)
+        public static bool DrawSquareButton(string caption, bool isEnabled)
         {
             GUI.contentColor = Colors.ControlText;
-            return GUILayout.Button(caption ?? string.Empty, GUILayout.Height(ButtonHeight), GUILayout.Width(ButtonHeight));
+            bool oldEnabled = GUI.enabled;
+            GUI.enabled = isEnabled;
+            bool result = GUILayout.Button(caption ?? string.Empty, GUILayout.Height(ButtonHeight), GUILayout.Width(ButtonHeight));
+            GUI.enabled = oldEnabled;
+            return result;
         }
 
         /// <summary>
         /// Draws an expander with user-provided header and content.
         /// </summary>
         /// <param name="header">A delegate that draws the header of the expander.</param>
+        /// <param name="enabled">A value indicating whether the expander can be expanded.</param>
         /// <param name="expanded">A value indicating whether the expander is in expanded state.</param>
         /// <param name="content">A delegate that draws the body of the expander. Will be only called if expanded.</param>
         /// <param name="indent">The right margin value for the header and the content.</param>
         /// <returns>A value indicating the expander is currently expanded.</returns>
-        public static bool DrawExpander(Action header, bool expanded, Action<float> content, float indent)
+        public static bool DrawExpander(Action header, bool enabled, bool expanded, Action<float> content, float indent)
         {
             GUILayout.BeginHorizontal(GUILayout.ExpandHeight(false));
 
             GUILayout.Space(indent);
 
-            string expanderSymbol = expanded ? ExpanderExpandedSymbol : ExpanderCollapsedSymbol;
-            bool toggleExpand = DrawSquareButton(expanderSymbol);
+            string expanderSymbol = enabled && expanded ? ExpanderExpandedSymbol : ExpanderCollapsedSymbol;
+            bool toggleExpand = DrawSquareButton(expanderSymbol, enabled);
             if (toggleExpand)
             {
                 expanded = !expanded;

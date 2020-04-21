@@ -26,7 +26,9 @@ namespace ConflictSolver.Views
         {
             _conflict = conflict ?? throw new ArgumentNullException(nameof(conflict));
             Description = TextTools.GetNumberDescriptionText(conflict.MemberCount, Strings.Member);
-            MemberNames = _conflict.ConflictingMembers.Select(m => m.ToString()).ToList();
+            var memberNames = _conflict.ConflictingMembers.Select(m => m.ToString()).ToList();
+            MemberNames = memberNames;
+            AnyMembers = memberNames.Count > 0;
         }
 
         /// <summary>
@@ -38,6 +40,11 @@ namespace ConflictSolver.Views
         /// Gets a collection of member names causing the conflict.
         /// </summary>
         public IEnumerable<string> MemberNames { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="MemberNames"/> collection contains any values.
+        /// </summary>
+        public bool AnyMembers { get; }
 
         /// <summary>
         /// Gets the description of this conflict item.

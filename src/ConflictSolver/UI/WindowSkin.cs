@@ -95,6 +95,9 @@ namespace ConflictSolver.UI
             UnitySkin.label.alignment = TextAnchor.MiddleLeft;
             UnitySkin.label.stretchHeight = true;
 
+            UnitySkin.toggle.alignment = TextAnchor.UpperLeft;
+            UnitySkin.toggle.stretchHeight = true;
+
             UnitySkin.button.stretchWidth = false;
             UnitySkin.button.padding = new RectOffset(4, 4, 2, 2);
 

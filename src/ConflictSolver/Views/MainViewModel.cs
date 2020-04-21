@@ -20,6 +20,7 @@ namespace ConflictSolver.Views
         private readonly object _lockObject = new object();
 
         private IEnumerable<MonitoredMod> _data;
+        private bool _showOwnModQueries;
 
         /// <summary>
         /// Gets a value indicating whether a data snapshot is already available.
@@ -30,6 +31,23 @@ namespace ConflictSolver.Views
         /// Gets a value indicating whether a data snapshot is currently being processed.
         /// </summary>
         public bool IsProcessingSnapshot { get; private set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the <see cref="AccessTarget.OwnMod"/> items
+        /// should be displayed.
+        /// </summary>
+        public bool ShowOwnModQueries
+        {
+            get => _showOwnModQueries;
+            set
+            {
+                if (_showOwnModQueries != value)
+                {
+                    _showOwnModQueries = value;
+                    ToggleOwnModQueriesVisibility(value);
+                }
+            }
+        }
 
         /// <summary>
         /// Gets a collection of the mod information items representing a data snapshot
@@ -117,8 +135,16 @@ namespace ConflictSolver.Views
                 }
             }
 
-            string content = ResultsTools.SnapshotToString(_data);
+            string content = ResultsTools.SnapshotToString(_data, ShowOwnModQueries);
             Clipboard.text = content;
+        }
+
+        private void ToggleOwnModQueriesVisibility(bool value)
+        {
+            foreach (var item in Snapshot)
+            {
+                item.ShowOwnModQueries = value;
+            }
         }
 
         private void DoTakeSnapshot(object _)
