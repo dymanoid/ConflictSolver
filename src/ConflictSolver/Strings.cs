@@ -20,6 +20,11 @@ namespace ConflictSolver
         public const string ModDescription = "Detects possible mod conflicts. Automatically!";
 
         /// <summary>
+        /// The 'version unknown' string.
+        /// </summary>
+        public const string UnknownVersion = "version unknown";
+
+        /// <summary>
         /// The Harmony Library ID of this mod.
         /// </summary>
         public const string ModHarmonyId = "com.dymanoid.conflictsolver";

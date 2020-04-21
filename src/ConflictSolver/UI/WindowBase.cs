@@ -18,7 +18,6 @@ namespace ConflictSolver.UI
     {
         private static int LastUsedWindowId = 4095;
 
-        private readonly string _title;
         private readonly int _windowId;
         private readonly bool _resizable;
         private readonly ModalWindowHelper _modalUI = new ModalWindowHelper();
@@ -44,9 +43,8 @@ namespace ConflictSolver.UI
         /// <param name="initialBoundaries">The initial window's boundaries.</param>
         /// <param name="resizable">A value indicating whether the window should be resizable.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="title"/> is null.</exception>
-        protected WindowBase(string title, Rect initialBoundaries, bool resizable)
+        protected WindowBase(Rect initialBoundaries, bool resizable)
         {
-            _title = title ?? throw new ArgumentNullException(nameof(title));
             _windowId = ++LastUsedWindowId;
             _windowBoundaries = initialBoundaries;
             _resizable = resizable;
@@ -59,6 +57,11 @@ namespace ConflictSolver.UI
                 .ChangeSizeBy(height: -TitleBarHeight)
                 .OffsetBy(vertical: TitleBarHeight);
         }
+
+        /// <summary>
+        /// Gets or sets the window title.
+        /// </summary>
+        public string Title { get; set; }
 
         /// <inheritdoc/>
         public Rect WindowBoundaries => _windowBoundaries;
@@ -228,8 +231,11 @@ namespace ConflictSolver.UI
 
             _titleBarArea.Begin();
 
-            GUI.contentColor = Colors.ControlText;
-            GUILayout.Label(_title);
+            if (Title != null)
+            {
+                GUI.contentColor = Colors.ControlText;
+                GUILayout.Label(Title);
+            }
 
             _titleBarArea.End();
         }

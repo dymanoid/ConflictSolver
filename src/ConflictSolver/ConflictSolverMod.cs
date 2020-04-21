@@ -4,6 +4,7 @@
 
 using ConflictSolver.Game;
 using ConflictSolver.Monitor;
+using ConflictSolver.Tools;
 using ConflictSolver.Views;
 using ICities;
 
@@ -51,6 +52,7 @@ namespace ConflictSolver
             else
             {
                 mainWindow.DataContext = new MainViewModel();
+                mainWindow.Title = Name + " - " + AssemblyVersion.SemVer;
             }
         }
 

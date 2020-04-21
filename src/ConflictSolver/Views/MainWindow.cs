@@ -20,7 +20,7 @@ namespace ConflictSolver.Views
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
         /// </summary>
         public MainWindow()
-            : base(Strings.ModName, Appearance.DefaultWindowBoundaries, resizable: true)
+            : base(Appearance.DefaultWindowBoundaries, resizable: true)
         {
         }
 
