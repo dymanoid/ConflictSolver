@@ -14,6 +14,16 @@ namespace ConflictSolver
     /// </summary>
     public sealed class ConflictSolverMod : LoadingExtensionBase, IUserMod
     {
+        private readonly PauseMenuExtension _pauseMenuExtension;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConflictSolverMod"/> class.
+        /// </summary>
+        public ConflictSolverMod()
+        {
+            _pauseMenuExtension = new PauseMenuExtension(Name, ShowMainWindow);
+        }
+
         /// <summary>
         /// Gets the name of this mod.
         /// </summary>
@@ -51,6 +61,26 @@ namespace ConflictSolver
         {
             GameConnection.DestroyInstance<Engine>(e => e.Shutdown());
             GameConnection.DestroyInstance<MainWindow>();
+        }
+
+        /// <summary>
+        /// Called by the game after a city or a map has been loaded.
+        /// </summary>
+        /// <param name="mode">The game mode the city or map is loaded in.</param>
+        public override void OnLevelLoaded(LoadMode mode) => _pauseMenuExtension.Enable();
+
+        /// <summary>
+        /// Called by the game just before a city or a map is unloaded.
+        /// </summary>
+        public override void OnLevelUnloading() => _pauseMenuExtension.Disable();
+
+        private static void ShowMainWindow()
+        {
+            var mainWindow = GameConnection.GetInstance<MainWindow>();
+            if (mainWindow != null)
+            {
+                mainWindow.IsVisible = true;
+            }
         }
     }
 }
