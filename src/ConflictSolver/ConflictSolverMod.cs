@@ -42,6 +42,7 @@ namespace ConflictSolver
         {
             UnityEngine.Debug.Log($"{Strings.DebugLogPrefix} is now enabled");
 
+            GameConnection.GetInstance<Engine>().Run();
             var mainWindow = GameConnection.GetInstance<MainWindow>();
             if (mainWindow == null)
             {
