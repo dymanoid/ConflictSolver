@@ -14,8 +14,6 @@ namespace ConflictSolver.Results
     /// </summary>
     internal readonly struct MemberAccessInfo : IEquatable<MemberAccessInfo>, IComparable<MemberAccessInfo>
     {
-        private readonly string _string;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MemberAccessInfo"/> struct.
         /// </summary>
@@ -27,7 +25,6 @@ namespace ConflictSolver.Results
             Member = member ?? throw new ArgumentNullException(nameof(member));
             AccessTarget = accessTarget;
             AccessTypes = accessTypes;
-            _string = $"[{accessTarget,10}] [{accessTypes,18}] {member.ToFullString()}";
         }
 
         /// <summary>
@@ -86,6 +83,6 @@ namespace ConflictSolver.Results
         }
 
         /// <inheritdoc/>
-        public override string ToString() => _string;
+        public override string ToString() => $"[{AccessTarget,10}] [{AccessTypes,18}] {Member.ToFullString()}";
     }
 }

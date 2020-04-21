@@ -12,33 +12,51 @@ namespace ConflictSolver.Views
     /// <summary>
     /// A helper class for displaying the <see cref="MonitoredModViewModel"/>.
     /// </summary>
-    internal static class MonitoredModView
+    internal sealed class MonitoredModView
     {
         private const int MaxItemsInStringList = 100;
+        private readonly GUIStyle _monotypeLabelStyle;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MonitoredModView"/> class.
+        /// </summary>
+        /// <param name="monotypeLabelStyle">The style of the items that have to be rendered with monotype font.</param>
+        public MonitoredModView(GUIStyle monotypeLabelStyle)
+        {
+            _monotypeLabelStyle = monotypeLabelStyle ?? throw new System.ArgumentNullException(nameof(monotypeLabelStyle));
+        }
 
         /// <summary>
         /// Draws the content of the specified <see cref="MonitoredModViewModel"/> instance
         /// in the current area.
         /// </summary>
         /// <param name="mod">A <see cref="MonitoredModViewModel"/> instance to display.</param>
-        /// <param name="monotypeLabelStyle">The style of the items that have to be rendered with monotype font.</param>
-        public static void DrawModView(MonitoredModViewModel mod, GUIStyle monotypeLabelStyle)
+        public void DrawModView(MonitoredModViewModel mod)
             => mod.IsExpanded = DrawTools.DrawExpander(
                 () => DrawItemHeader(mod.ModName, mod.Description),
                 enabled: true,
-                mod.IsExpanded,
-                _ => DrawModItemContent(mod, Appearance.LargeMargin, monotypeLabelStyle),
-                0f);
+                expanded: mod.IsExpanded,
+                _ => DrawModItemContent(mod, Appearance.LargeMargin),
+                indent: 0f);
 
-        private static void DrawModItemContent(MonitoredModViewModel mod, float indent, GUIStyle monotypeLabelStyle)
+        private static void DrawItemHeader(string caption, string description)
+        {
+            GUI.contentColor = Colors.Text;
+            GUILayout.Label(caption);
+
+            GUI.contentColor = Colors.ShadedText;
+            GUILayout.Label(description);
+        }
+
+        private void DrawModItemContent(MonitoredModViewModel mod, float indent)
         {
             indent += Appearance.LargeMargin;
 
             mod.IsReflectionListExpanded = DrawTools.DrawExpander(
                 () => DrawItemHeader(Strings.ReflectionQueries, mod.QueriesDescription),
-                mod.AnyQueries,
-                mod.IsReflectionListExpanded,
-                i => DrawStringList(mod.QueriedMembers, i, monotypeLabelStyle),
+                enabled: mod.AnyQueries,
+                expanded: mod.IsReflectionListExpanded,
+                i => DrawStringList(mod.QueriedMembers, i),
                 indent);
 
             string conflictsCaption = mod.AnyConflicts
@@ -55,44 +73,42 @@ namespace ConflictSolver.Views
 
             if (mod.AnyConflicts)
             {
-                DrawConflictedMods(mod.Conflicts, indent, monotypeLabelStyle);
+                DrawConflictedMods(mod.Conflicts, indent);
             }
         }
 
-        private static void DrawConflictedMods(IEnumerable<ConflictInfoViewModel> conflicts, float indent, GUIStyle monotypeLabelStyle)
+        private void DrawConflictedMods(IEnumerable<ConflictInfoViewModel> conflicts, float indent)
         {
             foreach (var conflict in conflicts)
             {
                 conflict.IsExpanded = DrawTools.DrawExpander(
                     () => DrawItemHeader(conflict.ModName, conflict.Description),
-                    conflict.AnyMembers,
-                    conflict.IsExpanded,
-                    i => DrawStringList(conflict.MemberNames, i, monotypeLabelStyle),
+                    enabled: conflict.AnyMembers,
+                    expanded: conflict.IsExpanded,
+                    i => DrawStringList(conflict.MemberNames, i),
                     indent);
             }
         }
 
-        private static void DrawItemHeader(string caption, string description)
+        private void DrawStringList(IEnumerable<MemberViewModel> items, float indent)
         {
-            GUI.contentColor = Colors.Text;
-            GUILayout.Label(caption);
-
-            GUI.contentColor = Colors.ShadedText;
-            GUILayout.Label(description);
-        }
-
-        private static void DrawStringList(IEnumerable<string> items, float indent, GUIStyle monotypeLabelStyle)
-        {
-            GUI.contentColor = Colors.Text;
-
             int currentItem = 0;
-            foreach (string type in items.Take(MaxItemsInStringList + 1))
+            foreach (var member in items.Take(MaxItemsInStringList + 1))
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(indent);
+                GUI.contentColor = Colors.Text;
                 if (currentItem++ < MaxItemsInStringList)
                 {
-                    GUILayout.Label(type, monotypeLabelStyle);
+                    GUILayout.Label(member.AccessInfo, _monotypeLabelStyle);
+                    GUI.contentColor = Colors.BlueText;
+                    GUILayout.Label(member.Type, _monotypeLabelStyle);
+                    GUI.contentColor = Colors.RedText;
+                    GUILayout.Label(member.Assembly, _monotypeLabelStyle);
+                    GUI.contentColor = Colors.GreenText;
+                    GUILayout.Label(member.Class, _monotypeLabelStyle);
+                    GUI.contentColor = Colors.YellowText;
+                    GUILayout.Label(member.Name, _monotypeLabelStyle);
                 }
                 else
                 {

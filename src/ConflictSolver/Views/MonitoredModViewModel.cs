@@ -17,8 +17,8 @@ namespace ConflictSolver.Views
     internal sealed class MonitoredModViewModel
     {
         private readonly MonitoredMod _modInfo;
-        private readonly List<string> _queriedMembers;
-        private readonly List<string> _foreignQueriedMembers;
+        private readonly List<MemberViewModel> _queriedMembers;
+        private readonly List<MemberViewModel> _foreignQueriedMembers;
         private readonly string _queriedMembersCount;
         private readonly string _foreignQueriedMembersCount;
 
@@ -34,10 +34,10 @@ namespace ConflictSolver.Views
             var conflicts = modInfo.Conflicts.Select(c => new ConflictInfoViewModel(c)).ToList();
             AnyConflicts = conflicts.Count > 0;
             Conflicts = conflicts;
-            _queriedMembers = _modInfo.QueriedMembers.Select(m => m.ToString()).ToList();
+            _queriedMembers = _modInfo.QueriedMembers.Select(m => new MemberViewModel(in m)).ToList();
             _foreignQueriedMembers = _modInfo.QueriedMembers
                 .Where(m => m.AccessTarget != AccessTarget.OwnMod)
-                .Select(m => m.ToString()).ToList();
+                .Select(m => new MemberViewModel(in m)).ToList();
             _queriedMembersCount = "(" + _queriedMembers.Count + ")";
             _foreignQueriedMembersCount = "(" + _foreignQueriedMembers.Count + ")";
         }
@@ -50,7 +50,7 @@ namespace ConflictSolver.Views
         /// <summary>
         /// Gets a collection of member names that have been queried by this mod via Reflection.
         /// </summary>
-        public IEnumerable<string> QueriedMembers => ShowOwnModQueries ? _queriedMembers : _foreignQueriedMembers;
+        public IEnumerable<MemberViewModel> QueriedMembers => ShowOwnModQueries ? _queriedMembers : _foreignQueriedMembers;
 
         /// <summary>
         /// Gets the collection of the <see cref="ConflictInfoViewModel"/> objects that describe

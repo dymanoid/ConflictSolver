@@ -44,6 +44,26 @@ namespace ConflictSolver.UI
         public static Color ShadedText { get; } = FromRgb(128, 128, 128);
 
         /// <summary>
+        /// Gets the blue text color.
+        /// </summary>
+        public static Color BlueText { get; } = FromRgb(86, 156, 214);
+
+        /// <summary>
+        /// Gets the yellow text color.
+        /// </summary>
+        public static Color YellowText { get; } = FromRgb(220, 220, 170);
+
+        /// <summary>
+        /// Gets the green text color.
+        /// </summary>
+        public static Color GreenText { get; } = FromRgb(78, 201, 176);
+
+        /// <summary>
+        /// Gets the red text color.
+        /// </summary>
+        public static Color RedText { get; } = FromRgb(216, 160, 223);
+
+        /// <summary>
         /// Gets the color of the window's 'close' button.
         /// </summary>
         public static Color CloseButton { get; } = FromRgb(0, 122, 204);

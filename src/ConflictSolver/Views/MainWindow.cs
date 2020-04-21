@@ -14,7 +14,7 @@ namespace ConflictSolver.Views
     internal sealed class MainWindow : WindowBase<MainViewModel>
     {
         private Vector2 _scrollPosition;
-        private GUIStyle _monotypeLabelStyle;
+        private MonitoredModView _modView;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -58,12 +58,15 @@ namespace ConflictSolver.Views
                 return;
             }
 
-            if (_monotypeLabelStyle is null)
+            if (_modView is null)
             {
-                _monotypeLabelStyle = new GUIStyle(skin.UnitySkin.label)
+                var monotypeLabelStyle = new GUIStyle(skin.UnitySkin.label)
                 {
                     font = Font.CreateDynamicFontFromOSFont(Appearance.MonotypeFontNames, Appearance.FontSize),
+                    margin = new RectOffset(0, 0, 2, 2),
                 };
+
+                _modView = new MonitoredModView(monotypeLabelStyle);
             }
 
             GUILayout.BeginVertical();
@@ -128,7 +131,7 @@ namespace ConflictSolver.Views
 
             foreach (var mod in DataContext.Snapshot)
             {
-                MonitoredModView.DrawModView(mod, _monotypeLabelStyle);
+                _modView.DrawModView(mod);
             }
 
             GUILayout.FlexibleSpace();
